@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Fraud Detection Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f8fb;
+            color: #333;
+        }
+        header {
+            background-color: #005a9c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .tagline {
+            font-style: italic;
+            color: #d4e3f0;
+        }
+        .section-title {
+            color: #005a9c;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .plot-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .plot-container h3 {
+            color: #00704a;
+            margin-top: 40px;
+        }
+        .plot-container img {
+            width: 90%;
+            max-width: 800px;
+            margin: 10px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            justify-items: center;
+            margin-top: 20px;
+        }
+        .grid img {
+            width: 100%;
+            max-width: 600px;
+        }
+        .caption {
+            font-size: 1rem;
+            margin-top: 8px;
+            color: #222;
+            font-weight: 600;
+        }
+        pre {
+            background-color: #eaeaea;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            overflow-x: auto;
+        }
+        footer {
+            background-color: #005a9c;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Credit Card Fraud Detection Dashboard</h1>
+        <p class="tagline">Visual Insights from Bivariate and Multivariate Explorations</p>
+    </header>
+
+    <main>
+        <section>
+            <h2 class="section-title">Bivariate Analysis</h2>
+            <div class="plot-container">
+                <h3>1. Transaction Amount by Class</h3>
+                <img src="static/plots/bivariate_amount.png" alt="Amount by Class">
+                <p class="caption">Fraudulent transactions often show higher or more variable amounts than legitimate ones, highlighting financial discrepancies.</p>
+
+                <h3>2. Time Distribution by Class</h3>
+                <img src="static/plots/bivariate_time.png" alt="Time by Class">
+                <p class="caption">The time distribution reveals patterns in when fraudulent activities are more likely to occur compared to normal transactions.</p>
+
+                <h3>3. PCA Component Distributions by Class</h3>
+                <div class="grid">
+                    <div>
+                        <img src="static/plots/bivariate_V1.png" alt="V1 by Class">
+                        <p class="caption">Component V1 clearly separates classes by its spread, indicating its utility in fraud detection.</p>
+                    </div>
+                    <div>
+                        <img src="static/plots/bivariate_V2.png" alt="V2 by Class">
+                        <p class="caption">A visible skew in V2 among frauds highlights its strong signal for identifying anomalies.</p>
+                    </div>
+                    <div>
+                        <img src="static/plots/bivariate_V3.png" alt="V3 by Class">
+                        <p class="caption">V3’s noticeable variation across classes makes it effective for classification models.</p>
+                    </div>
+                    <div>
+                        <img src="static/plots/bivariate_V4.png" alt="V4 by Class">
+                        <p class="caption">V4 shows consistent shifts between classes, providing useful differentiation.</p>
+                    </div>
+                    <div>
+                        <img src="static/plots/bivariate_V5.png" alt="V5 by Class">
+                        <p class="caption">Fraud cases in V5 exhibit high deviation, underlining its predictive potential.</p>
+                    </div>
+                </div>
+
+                <h3>4. Correlation Between Amount and PCA (Frauds)</h3>
+                <img src="static/plots/bivariate_amount_corr_fraud.png" alt="Amount Correlation in Frauds">
+                <p class="caption">Strong correlations between amount and certain PCA components can help flag suspicious patterns early.</p>
+
+                <h3>5. Correlation Between PCA Components and Class</h3>
+                <img src="static/plots/bivariate_class_corr.png" alt="PCA vs Class Correlation">
+                <p class="caption">Several PCA components exhibit meaningful correlations with fraud class, reinforcing their analytical value.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Multivariate Analysis</h2>
+            <div class="plot-container">
+                <h3>1. t-SNE Visualization of PCA Components</h3>
+                <img src="static/plots/multivariate_tsne.png" alt="t-SNE PCA">
+                <p class="caption">t-SNE reveals clear visual separation of fraud clusters, aiding in pattern discovery and interpretability.</p>
+
+                <h3>2. KMeans Clustering on PCA + t-SNE</h3>
+                <img src="static/plots/multivariate_kmeans.png" alt="KMeans Clustering">
+                <p class="caption">Even without labels, clustering reveals meaningful groupings that align with fraud tendencies.</p>
+
+                <h3>3. Random Forest Feature Importance</h3>
+                <img src="static/plots/multivariate_rf_importance.png" alt="Feature Importance">
+                <p class="caption">Top features identified by the model can significantly improve fraud prediction accuracy.</p>
+
+                <h3>4 & 5. AUPRC Scores</h3>
+                <pre id="modelScores">Loading model scores...</pre>
+                <p class="caption">AUPRC provides a performance snapshot tailored for rare-event detection like fraud cases.</p>
+                <script>
+                    fetch('static/plots/multivariate_model_scores.txt')
+                        .then(response => response.text())
+                        .then(data => document.getElementById('modelScores').textContent = data);
+                </script>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Credit Card Fraud Detection | Built with 💡 and Python</p>
+    </footer>
+</body>
+</html>
